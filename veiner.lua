@@ -32,7 +32,7 @@ function checkBlock(l_or_r)
     elseif facing < 1 then
         block = 4
     end
-    return mined[coords.x+directions[block][1]][coords=y][coords.z+directions[block][2]] ~= nil
+    return mined[coords.x+directions[block][1]][coords.y][coords.z+directions[block][2]] ~= nil
 end
 
 --Just to make things more concise with my stack
