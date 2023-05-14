@@ -1,10 +1,10 @@
 --Variable definition
-mined = {[0]={[0]={[0]=1}}}
-coords = {x=0,y=0,z=0}
+mined = { [0] = { [0] = { [0] = 1 } } }
+coords = { x = 0, y = 0, z = 0 }
 facing = 1
-directions = {{1,0},{0,1},{-1,0},{0,-1}}
-stack = {"stop"}
-search = "mushroom"
+directions = { { 1, 0 }, { 0, 1 }, { -1, 0 }, { 0, -1 } }
+stack = { "stop" }
+search = "birch"
 
 --Function to change direction of turtle
 function rotate(l_or_r)
@@ -27,12 +27,18 @@ function checkBlock(l_or_r)
     elseif l_or_r == "right" then
         block = facing + 1
     end
-    if facing > 4 then
+    if block > 4 then
         block = 1
-    elseif facing < 1 then
+    elseif block < 1 then
         block = 4
     end
-    return mined[coords.x+directions[block][1]][coords.y][coords.z+directions[block][2]] == 1
+    if not pcall(function () return mined[coords.x + directions[block][1]][coords.y][coords.z + directions[block][2]] end) then
+        mined[coords.x + directions[block][1]] = {}
+        mined[coords.x + directions[block][1]][coords.y] = {}
+        mined[coords.x + directions[block][1]][coords.y][coords.z + directions[block][2]] = 0
+        return false
+    end
+    return mined[coords.x + directions[block][1]][coords.y][coords.z + directions[block][2]] == 1
 end
 
 --Just to make things more concise with my stack
@@ -65,14 +71,14 @@ function checkAndDig()
         mined[coords.x] = {}
         mined[coords.x][coords.y] = {}
         mined[coords.x][coords.y][coords.z] = 1
-        stack = {"forward",stack}
+        stack = { "forward", stack }
         move()
         return true
     end
     return false
 end
 
-function move()    
+function move()
     --Refuel the turtle if the fuel is low
     local fuel = turtle.getFuelLevel()
     while fuel <= 100 do
@@ -82,7 +88,7 @@ function move()
 
     --Actual mining
     if stack[1] ~= "forward" then
-        for i = 1,4 do
+        for i = 1, 4 do
             checkAndDig()
             turtle.turnRight()
             rotate("right")
@@ -112,7 +118,7 @@ function move()
         mined[coords.x] = {}
         mined[coords.x][coords.y] = {}
         mined[coords.x][coords.y][coords.z] = 1
-        stack = {"up",stack}
+        stack = { "up", stack }
         move()
     end
     block_check, block = turtle.inspectDown()
@@ -123,7 +129,7 @@ function move()
         mined[coords.x] = {}
         mined[coords.x][coords.y] = {}
         mined[coords.x][coords.y][coords.z] = 1
-        stack = {"down",stack}
+        stack = { "down", stack }
         move()
     end
     moveReversed()
