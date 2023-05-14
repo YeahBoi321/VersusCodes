@@ -32,7 +32,7 @@ function checkBlock(l_or_r)
     elseif facing < 1 then
         block = 4
     end
-    return mined[coords.x+directions[block][1]][coords.y][coords.z+directions[block][2]] ~= nil
+    return mined[coords.x+directions[block][1]][coords.y][coords.z+directions[block][2]] == 1
 end
 
 --Just to make things more concise with my stack
@@ -62,6 +62,8 @@ function checkAndDig()
         turtle.forward()
         coords.x = coords.x + directions[facing][1]
         coords.z = coords.z + directions[facing][2]
+        mined[coords.x] = {}
+        mined[coords.x][coords.y] = {}
         mined[coords.x][coords.y][coords.z] = 1
         stack = {"forward",stack}
         move()
@@ -70,7 +72,7 @@ function checkAndDig()
     return false
 end
 
-function move()
+function move()    
     --Refuel the turtle if the fuel is low
     local fuel = turtle.getFuelLevel()
     while fuel <= 100 do
@@ -107,6 +109,8 @@ function move()
         turtle.digUp()
         turtle.up()
         coords.y = coords.y + 1
+        mined[coords.x] = {}
+        mined[coords.x][coords.y] = {}
         mined[coords.x][coords.y][coords.z] = 1
         stack = {"up",stack}
         move()
@@ -116,6 +120,8 @@ function move()
         turtle.digDown()
         turtle.down()
         coords.y = coords.y - 1
+        mined[coords.x] = {}
+        mined[coords.x][coords.y] = {}
         mined[coords.x][coords.y][coords.z] = 1
         stack = {"down",stack}
         move()
